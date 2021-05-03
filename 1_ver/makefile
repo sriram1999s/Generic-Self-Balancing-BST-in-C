@@ -1,3 +1,4 @@
+
 a.out : client.o dispatcher.o f_control.o view1.o view2.o
 	g++ client.o dispatcher.o f_control.o view1.o view2.o
 
@@ -15,3 +16,6 @@ view1.o : view1.hpp view1.cpp
 
 view2.o : view2.hpp view2.cpp
 	g++ -c view2.cpp
+
+clean:
+	rm *.o a.out
