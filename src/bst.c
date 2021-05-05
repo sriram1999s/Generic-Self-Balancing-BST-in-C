@@ -9,7 +9,7 @@ void init_bst(Bst *tree)
   tree->size_ = 0;
 }
 
-void insert_bst(Bst *tree, void *val)
+void insert_bst(Bst *tree, void *val, bool (*less_than)(const void *, const void *))
 {
   if(!tree) return;
   if(!tree->root_)
@@ -18,6 +18,38 @@ void insert_bst(Bst *tree, void *val)
     tree->root_->value = val;
     tree->root_->left = tree->root_->right = NULL;
   }
+  Node *trav = tree->root_;
+  Node *prev = NULL;
+
+  while(trav)
+  {
+    prev= trav;
+    if(!less_than(prev->value, val) && !less_than(val, prev->value)) break;
+    if(less_than(trav->value, val))
+    {
+      trav = trav->right;
+    }
+    else
+    {
+      trav = trav->left;
+    }
+  }
+  if(!less_than(prev->value, val) && !less_than(val, prev->value))
+  return;
+  Node *temp = (Node*)malloc(sizeof(Node));
+  temp->value = val;
+  temp->left = NULL;
+  temp->right = NULL;
+
+  if(less_than(prev->value, val))
+  {
+    prev->right = temp;
+  }
+  else
+  {
+    prev->left = temp;
+  }
+
 }
 
 void _dealloc(Node *n)
@@ -53,4 +85,28 @@ void inorder(const Bst *tree, void (*print)(const void *))
     _inorder(trav, print);
     printf("\n");
   }
+}
+
+void find(const Bst *tree, void *val, bool (*less_than)(const void *, const void *)) // to be modded
+{
+  if(!tree) return;
+  Node *trav = tree->root_;
+  while(trav)
+  {
+    if(!less_than(trav->value, val) && !less_than(val, trav->value))
+    {
+      printf("FOUND\n");
+      return;
+    }
+    if(less_than(trav->value, val))
+    {
+      trav = trav->right;
+    }
+    else
+    {
+      trav = trav->left;
+    }
+
+  }
+  printf("NOT FOUND\n");
 }
