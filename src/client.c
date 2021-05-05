@@ -15,4 +15,5 @@ int main()
   int *ptr = &a;
   insert_bst(&t, ptr);
   inorder(&t, print_int);
+  dealloc(&t);
 }

@@ -14,7 +14,7 @@ void insert_bst(Bst *tree, void *val)
   if(!tree) return;
   if(!tree->root_)
   {
-    tree->root_ = (Node*)malloc(sizeof(Node*));
+    tree->root_ = (Node*)malloc(sizeof(Node));
     tree->root_->value = val;
     tree->root_->left = tree->root_->right = NULL;
   }
