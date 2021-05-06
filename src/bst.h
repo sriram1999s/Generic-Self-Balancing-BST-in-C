@@ -2,6 +2,8 @@
 #define BST_H
 #include<stdbool.h>
 
+// #define get_ptr(type, __num, value) ({ type tmp##__num = value; type *ptr##__num = &tmp##__num; ptr##__num; })
+
 typedef struct Node Node;
 struct Node
 {
@@ -19,6 +21,7 @@ struct Bst
 
 void init_bst(Bst *tree);
 void insert_bst(Bst *tree, void *val, bool (*less_than)(const void *, const void *));
+void remove_bst(Bst *tree, void *val, bool (*less_than)(const void *, const void *));
 
 void _dealloc(Node *n);
 void dealloc(Bst *tree);
