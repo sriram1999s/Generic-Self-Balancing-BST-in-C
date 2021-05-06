@@ -22,16 +22,22 @@ int main()
   int *ptr2 = &a2;
   int a3 = 2;
   int *ptr3 = &a3;
-  int a4 = 9;
+  int a4 = 7;
   int *ptr4 = &a4;
-  int a5 = 6;
-  int *ptr5 = &a5;
+  // int a5 = 6;
+  // int *ptr5 = &a5;
+  // int a6 = 9;
+  // int *ptr6 = &a6;
+  // int a7 = 8;
+  // int *ptr7 = &a7;
 
   insert_bst(&t, ptr1, less_int);
   insert_bst(&t, ptr2, less_int);
   insert_bst(&t, ptr3, less_int);
   insert_bst(&t, ptr4, less_int);
-  insert_bst(&t, ptr5, less_int);
+  // insert_bst(&t, ptr5, less_int);
+  // insert_bst(&t, ptr6, less_int);
+  // insert_bst(&t, ptr7, less_int);
 
   inorder(&t, print_int);
 
@@ -42,6 +48,9 @@ int main()
   int temp2 = 13;
   int *ptr_temp2 = &temp2;
   find(&t, ptr_temp2, less_int);
+
+  remove_bst(&t, ptr_temp1, less_int);
+  inorder(&t, print_int);
 
   dealloc(&t);
 }

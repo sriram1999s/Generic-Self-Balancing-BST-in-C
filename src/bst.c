@@ -121,7 +121,7 @@ void remove_bst(Bst *tree, void *val, bool (*less_than)(const void *, const void
   Node *trav = tree->root_;
   Node *prev = NULL;
 
-  while (trav && !less_than(trav->value, val) && !less_than(val, trav->value))
+  while (trav && (less_than(trav->value, val) || less_than(val, trav->value)))
   {
     prev = trav;
     if (less_than(trav->value, val))
@@ -137,42 +137,62 @@ void remove_bst(Bst *tree, void *val, bool (*less_than)(const void *, const void
   if (trav)
   {
     if (prev->right == trav)
-	{
-		if (!trav->right && !trav->left)
-		{
-			prev->right = NULL;
-			free(trav);
-		}
-		else if (!trav->right || !trav->left)
-		{
-			if (trav->right)
-			{
-				prev->right = trav->right;
-			} else if (trav->left) {
-				prev->left = trav->left;
-			}
-			free(trav);
-		}
-		else
-		{
-
-		}
-	}
-	else
-	{
-		if (!trav->right && !trav->left)
-		{
-			prev->left = NULL;
-			free(trav);
-		}
-		else if
-		{
-
-		}
-		else
-		{
-
-		}
-	}
+    {
+    	if (!trav->right || !trav->left) // trav is a leaf or trav has one child
+    	{
+    		if(trav->right)
+        {
+          prev->right = trav->right;
+        }
+        else
+        {
+          prev->right = trav->left;
+        }
+        free(trav);
+    	}
+    	else
+    	{
+        Node *inorder_prev = NULL;
+        Node *inorder_succ = trav->right;
+        while(inorder_succ->left)
+        {
+          inorder_prev = inorder_succ;
+          inorder_succ = inorder_succ->left;
+        }
+        trav->value = inorder_succ->value;
+        if(inorder_prev) inorder_prev->left = inorder_succ->right;
+        else trav->right = inorder_succ->right;
+        free(inorder_succ);
+    	}
+    }
+    else
+    {
+    	if (!trav->right || !trav->left)
+    	{
+        if(trav->right)
+        {
+          prev->left = trav->right;
+        }
+        else
+        {
+          prev->left = trav->left;
+        }
+        free(trav);
+    	}
+    	else
+    	{
+        Node *inorder_prev = NULL;
+        Node *inorder_succ = trav->right;
+        while(inorder_succ->left)
+        {
+          inorder_prev = inorder_succ;
+          inorder_succ = inorder_succ->left;
+        }
+        trav->value = inorder_succ->value;
+        if(inorder_prev) inorder_prev->left = inorder_succ->right;
+        else trav->right = inorder_succ->right;
+        free(inorder_succ);
+    	}
+    }
   }
 }
