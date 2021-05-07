@@ -1,24 +1,33 @@
 #include<stdio.h>
-
 #include<stdlib.h>
-
+#include<assert.h>
 #include "bst.h"
 
 void init_bst(Bst *tree)
 {
   if (!tree) return;
+  tree->end_ = (Node*)malloc(sizeof(Node));
+  tree->end_->value = NULL;
+  tree->end_->left = NULL;
+  tree->end_->right = NULL;
+
+
   tree->root_ = NULL;
   tree->size_ = 0;
 }
 
-void insert_bst(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
+void bst_insert(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
 {
-  if (!tree) return;
+  assert(val != NULL);
+  if (!tree || !tree->end_) return;
   if (!tree->root_) {
     tree->root_ = (Node*) malloc(sizeof(Node));
     tree->root_->value = val;
     tree->root_->left = tree->root_->right = NULL;
-    tree->root_->parent = NULL;
+
+    tree->root_->parent = tree->end_;
+    tree->end_->left = tree->root_;
+    tree->size_ = 1;
     return;
   }
 
@@ -50,6 +59,7 @@ void insert_bst(Bst *tree, void *val, bool( *less_than)(const void *, const void
   }
 
   temp->parent = prev;
+  ++(tree->size_);
 }
 
 void _dealloc(Node *n)
@@ -64,7 +74,15 @@ void _dealloc(Node *n)
 void dealloc(Bst *tree)
 {
   if (tree)
-    _dealloc(tree->root_);
+    _dealloc(tree->end_);
+}
+
+int get_size(const Bst *tree)
+{
+    if(!tree || !tree->end_)
+    return 0;
+
+    return tree->size_;
 }
 
 void _inorder(const Node *n, void( *print)(const void *))
@@ -85,31 +103,12 @@ void inorder(const Bst *tree, void( *print)(const void *))
   }
 }
 
-void find(const Bst *tree, void *val, bool( *less_than)(const void *, const void *)) // to be modded
+void bst_remove(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
 {
-  if (!tree) return;
-  Node *trav = tree->root_;
-  while (trav) {
-    if (!less_than(trav->value, val) && !less_than(val, trav->value)) {
-      printf("FOUND\n");
-      return;
-    }
-    if (less_than(trav->value, val)) {
-      trav = trav->right;
-    } else {
-      trav = trav->left;
-    }
-
-  }
-  printf("NOT FOUND\n");
-}
-
-void remove_bst(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
-{
-  if (!tree || !tree->root_) return;
+  if (!tree || !tree->end_ || !tree->root_) return;
 
   Node *trav = tree->root_;
-  Node *prev = NULL;
+  Node *prev = tree->end_;
 
   while (trav && (less_than(trav->value, val) || less_than(val, trav->value))) {
     prev = trav;
@@ -121,6 +120,7 @@ void remove_bst(Bst *tree, void *val, bool( *less_than)(const void *, const void
   }
 
   if (trav) {
+    --(tree->size_);
     if (prev->right == trav) {
       if (!trav->right || !trav->left) // trav is a leaf or trav has one child
       {
@@ -149,17 +149,28 @@ void remove_bst(Bst *tree, void *val, bool( *less_than)(const void *, const void
         }
         free(inorder_succ);
       }
-    } else {
-      if (!trav->right || !trav->left) {
-        if (trav->right) {
+    }
+    else // deleting root has to come here
+    {
+      if (!trav->right || !trav->left)
+      {
+        if (trav->right)
+        {
           prev->left = trav->right;
-		  trav->right->parent = prev;
-        } else {
+		      trav->right->parent = prev;
+        } else
+        {
           prev->left = trav->left;
-		  if (trav->left) trav->left->parent = prev;
+		      if (trav->left) trav->left->parent = prev;
+        }
+        if(trav == tree->root_) // in case of deleting root
+        {
+          tree->root_ = tree->end_->left;
         }
         free(trav);
-      } else {
+      }
+      else
+      {
         Node *inorder_prev = NULL;
         Node *inorder_succ = trav->right;
         while (inorder_succ->left) {
@@ -179,6 +190,27 @@ void remove_bst(Bst *tree, void *val, bool( *less_than)(const void *, const void
     }
   }
 }
+bool has_prev(const bst_iterator it)
+{
+  if (!it.current) return false;
+
+  Node *curr = it.current;
+  if (curr->left) return true;
+
+  if (curr->parent && curr == curr->parent->right) {
+    return true;
+  }
+
+  if (curr->parent && curr == curr->parent->left) {
+    while (curr->parent->value && curr->parent->left == curr) curr = curr->parent;
+    curr = curr->parent;
+    if (curr->value) return true;
+    else return false;
+  }
+
+  return false;
+
+}
 
 bool has_next(const bst_iterator it)
 {
@@ -193,9 +225,9 @@ bool has_next(const bst_iterator it)
   }
 
   if (curr->parent && curr == curr->parent->right) {
-    while (curr->parent && curr->parent->right == curr) curr = curr->parent;
+    while (curr->parent->value && curr->parent->right == curr) curr = curr->parent;
     curr = curr->parent;
-    if (curr) return true;
+    if (curr->value) return true;
     else return false;
   }
 
@@ -212,14 +244,14 @@ static void init_iterator(bst_iterator *it, Node *ptr)
   it->current = ptr;
 }
 
-bst_iterator begin(const Bst tree)
+bst_iterator begin(const Bst *tree)
 {
   bst_iterator it;
   init_iterator(&it, NULL);
 
-  if (!tree.root_) return it;
+  if (!tree->root_) return it;
 
-  Node *ptr = tree.root_;
+  Node *ptr = tree->root_;
 
   while (ptr->left) {
     ptr = ptr->left;
@@ -230,10 +262,11 @@ bst_iterator begin(const Bst tree)
   return it;
 }
 
-bst_iterator end(const Bst tree)
+bst_iterator end(const Bst *tree)
 {
   bst_iterator it;
-  init_iterator(&it, NULL);
+  Node *temp = tree->end_;
+  init_iterator(&it, temp);
 
   return it;
 }
@@ -241,6 +274,38 @@ bst_iterator end(const Bst tree)
 void* dereference(const bst_iterator it)
 {
   return it.current->value;
+}
+
+bst_iterator get_prev(const bst_iterator it)
+{
+  bst_iterator prev_it;
+  init_iterator(&prev_it, NULL);
+
+  if(!it.current) return prev_it;
+  Node *curr = it.current;
+
+  if(curr->left)
+  {
+    curr = curr->left;
+    while(curr->right)
+    {
+      curr = curr->right;
+    }
+    init_iterator(&prev_it, curr);
+    return prev_it;
+  }
+  if (curr->parent && curr == curr->parent->right) {
+    curr = curr->parent;
+    init_iterator(&prev_it, curr);
+    return prev_it;
+  }
+  if (curr->parent && curr == curr->parent->left) {
+    while (curr->parent->value && curr->parent->left == curr) curr = curr->parent;
+    curr = curr->parent;
+    init_iterator(&prev_it, curr);
+    return prev_it;
+  }
+  return prev_it;
 }
 
 bst_iterator get_next(const bst_iterator it)
@@ -266,10 +331,34 @@ bst_iterator get_next(const bst_iterator it)
   }
 
   if (curr->parent && curr == curr->parent->right) {
-    while (curr->parent && curr->parent->right == curr) curr = curr->parent;
+    while (curr->parent->value && curr->parent->right == curr) curr = curr->parent;
     curr = curr->parent;
     init_iterator(&next_it, curr);
+    return next_it;
+
   }
 
   return next_it;
+}
+
+bst_iterator find(const Bst *tree, void *val, bool( *less_than)(const void *, const void *)) // to be modded
+{
+  bst_iterator it;
+  init_iterator(&it, NULL);
+  if (!tree || !tree->end_) return it;
+  Node *trav = tree->root_;
+  while (trav) {
+    if (!less_than(trav->value, val) && !less_than(val, trav->value)) {
+      init_iterator(&it, trav);
+      return it;
+    }
+    if (less_than(trav->value, val)) {
+      trav = trav->right;
+    } else {
+      trav = trav->left;
+    }
+
+  }
+  init_iterator(&it, tree->end_);
+  return it;
 }

@@ -27,16 +27,16 @@ int main()
   int a5 = 6;
   int *ptr5 = &a5;
 
-  insert_bst(&t, ptr1, less_int);
-  insert_bst(&t, ptr2, less_int);
-  insert_bst(&t, ptr3, less_int);
-  insert_bst(&t, ptr4, less_int);
-  insert_bst(&t, ptr5, less_int);
-  insert_bst(&t, get_ptr(int, 1, 10), less_int);
-  insert_bst(&t, get_ptr(int, 2, 5), less_int);
-  insert_bst(&t, get_ptr(int, 3, 2), less_int);
-  insert_bst(&t, get_ptr(int, 4, 9), less_int);
-  insert_bst(&t, get_ptr(int, 5, 6), less_int);
+  bst_insert(&t, ptr1, less_int);
+  bst_insert(&t, ptr2, less_int);
+  bst_insert(&t, ptr3, less_int);
+  bst_insert(&t, ptr4, less_int);
+  bst_insert(&t, ptr5, less_int);
+  bst_insert(&t, get_ptr(int, 1, 10), less_int);
+  bst_insert(&t, get_ptr(int, 2, 5), less_int);
+  bst_insert(&t, get_ptr(int, 3, 2), less_int);
+  bst_insert(&t, get_ptr(int, 4, 9), less_int);
+  bst_insert(&t, get_ptr(int, 5, 6), less_int);
 
   inorder(&t, print_int);
 

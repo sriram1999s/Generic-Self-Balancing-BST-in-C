@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include<assert.h>
 
 #include "../bst.h"
 
@@ -23,20 +24,27 @@ int main()
   int elts[] = {10, 5, 2, 7, 6, 9, 8};
 
   for (int i=0; i<len; ++i) {
-    insert_bst(&t, &elts[i], less_int);
+    bst_insert(&t, &elts[i], less_int);
   }
 
   inorder(&t, print_int);
 
-  int temp1 = 5;
+  int temp1 = 10;
   int *ptr_temp1 = &temp1;
-  find(&t, ptr_temp1, less_int);
-
+  bst_iterator it1 = find(&t, ptr_temp1, less_int);
+  print_int(dereference(it1));
+  printf("\n");
+  
   int temp2 = 13;
   int *ptr_temp2 = &temp2;
-  find(&t, ptr_temp2, less_int);
+  bst_iterator it2 = find(&t, ptr_temp2, less_int);
+  assert(dereference(it2) == NULL);
 
-  remove_bst(&t, ptr_temp1, less_int);
+  printf("size : %d\n", get_size(&t));
+  bst_remove(&t, ptr_temp1, less_int);
+  printf("Here\n");
+
+  printf("size : %d\n", get_size(&t));
   inorder(&t, print_int);
 
   dealloc(&t);
