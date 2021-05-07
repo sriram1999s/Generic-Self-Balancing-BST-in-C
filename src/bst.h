@@ -11,6 +11,7 @@ struct Node
   Node *left;
   Node *right;
   Node *parent;
+  int height;
 };
 
 typedef struct Bst Bst;
@@ -47,6 +48,8 @@ void dealloc(Bst *tree);
 int get_size(const Bst *tree);
 void _inorder(const Node *n, void (*print)(const void *));
 void inorder(const Bst *tree, void (*print)(const void *));
+void _preorder(const Node *n, void (*print)(const void *));
+void preorder(const Bst *tree, void (*print)(const void *));
 
 bst_iterator find(const Bst *tree, void *val, bool (*less_than)(const void *, const void *)); //to be modified
 

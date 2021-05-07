@@ -3,63 +3,119 @@
 #include<assert.h>
 #include "bst.h"
 
+static Node *create_node(void *val, Node *parent)
+{
+  Node *new = (Node*)malloc(sizeof(Node));
+  new->value = val;
+  new->left = NULL;
+  new->right = NULL;
+  new->height = 1;
+  new->parent = parent;
+  return new;
+}
+Node *right_rotate(Node *y)
+{
+  Node *left_y = y->left;
+  Node *r_left_y = left_y->right;
+
+  left_y->right = y;
+  left_y->parent = y->parent;
+  y->parent = left_y;
+
+  y->left = r_left_y;
+  if(r_left_y) r_left_y->parent = y;
+
+  return left_y;
+}
+
+Node *left_rotate(Node *y)
+{
+  Node *right_y = y->right;
+  Node *l_right_y = right_y->left;
+
+  right_y->left = y;
+  right_y->parent = y->parent;
+  y->parent = right_y;
+
+  y->right = l_right_y;
+  if(l_right_y) l_right_y->parent = y;
+
+  return right_y;
+}
+static int height(const Node *node)
+{
+  if(!node) return 0;
+  return node->height;
+}
+static int balance(const Node *node)
+{
+  if(!node)
+    return 0;
+  return height(node->left) - height(node->right);
+}
+inline static int max(int a , int b)
+{
+  return (a > b) ? a : b;
+}
 void init_bst(Bst *tree)
 {
   if (!tree) return;
-  tree->end_ = (Node*)malloc(sizeof(Node));
-  tree->end_->value = NULL;
-  tree->end_->left = NULL;
-  tree->end_->right = NULL;
+  tree->end_ = create_node(NULL, NULL);
 
 
   tree->root_ = NULL;
   tree->size_ = 0;
 }
-
-void bst_insert(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
+static void update_height(Node *n)
 {
-  assert(val != NULL);
-  if (!tree || !tree->end_) return;
-  if (!tree->root_) {
-    tree->root_ = (Node*) malloc(sizeof(Node));
-    tree->root_->value = val;
-    tree->root_->left = tree->root_->right = NULL;
+  if(!n) return;
+  n->height = max(height(n->left), height(n->right));
+  update_height(n->left);
+  update_height(n->right);
 
-    tree->root_->parent = tree->end_;
-    tree->end_->left = tree->root_;
-    tree->size_ = 1;
-    return;
-  }
+}
+static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(const void *, const void *))
+{
+  if(!node) return create_node(val, parent);
 
-  Node *trav = tree->root_;
-  Node *prev = NULL;
+  if(!less_than(node->value, val) && !less_than(val, node->value)) return node;
 
-  while (trav) {
-    prev = trav;
-    if (!less_than(prev->value, val) && !less_than(val, prev->value)) break;
-    if (less_than(trav->value, val)) {
-      trav = trav->right;
-    } else {
-      trav = trav->left;
+  if(less_than(node->value, val)) node->right = _insert(node->right, val, node, less_than);
+  else node->left = _insert(node->left, val, node, less_than);
+
+  node->height = 1 + max(height(node->left), height(node->right));
+
+  int bal = balance(node);
+
+  if(bal > 1)
+  {
+    if(less_than(val, node->left->value)) return right_rotate(node);
+    else 
+    {
+      node->left =  left_rotate(node->left);
+      return right_rotate(node);
     }
   }
 
-  if (!less_than(prev->value, val) && !less_than(val, prev->value)) return;
-
-  Node *temp = (Node*) malloc(sizeof(Node));
-  temp->value = val;
-  temp->left = NULL;
-  temp->right = NULL;
-  temp->parent = NULL;
-
-  if (less_than(prev->value, val)) {
-    prev->right = temp;
-  } else {
-    prev->left = temp;
+  if(bal < -1)
+  {
+    if(less_than(node->right->value, val)) return left_rotate(node);
+    else
+    {
+      node->right = right_rotate(node->right);
+      return left_rotate(node);
+    }
   }
-
-  temp->parent = prev;
+  return node;
+}
+void bst_insert(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
+{
+  assert(val != NULL);
+  if(!tree) return;
+  tree->root_ = _insert(tree->root_, val, tree->end_, less_than);
+  tree->end_->left = tree->root_;
   ++(tree->size_);
+
 }
 
 void _dealloc(Node *n)
@@ -99,6 +155,24 @@ void inorder(const Bst *tree, void( *print)(const void *))
   if (tree) {
     Node *trav = tree->root_;
     _inorder(trav, print);
+    printf("\n");
+  }
+}
+
+void _preorder(const Node *n, void (*print)(const void *n))
+{
+  if (n) {
+    print(n->value);
+    _preorder(n->left, print);
+    _preorder(n->right, print);
+  }
+}
+
+void preorder(const Bst *tree, void (*print)(const void *))
+{
+  if (tree) {
+    Node *trav = tree->root_;
+    _preorder(trav, print);
     printf("\n");
   }
 }

@@ -20,21 +20,25 @@ int main()
   Bst t;
   init_bst(&t);
 
-  int len = 7;
-  int elts[] = {10, 5, 2, 7, 6, 9, 8};
-
+  int len = 8;
+  int elts[] = {10, 5, 2, 7, 6, 9, 8, 11};//, 7, 6, 9, 8};
+  // bst_insert(&t, &elts[0], less_int);
+  // bst_insert(&t, &elts[0], less_int);
   for (int i=0; i<len; ++i) {
     bst_insert(&t, &elts[i], less_int);
   }
 
   inorder(&t, print_int);
+  // dealloc(&t);
+  //
+  // return 0;
 
   int temp1 = 10;
   int *ptr_temp1 = &temp1;
   bst_iterator it1 = find(&t, ptr_temp1, less_int);
   print_int(dereference(it1));
   printf("\n");
-  
+
   int temp2 = 13;
   int *ptr_temp2 = &temp2;
   bst_iterator it2 = find(&t, ptr_temp2, less_int);
@@ -46,6 +50,7 @@ int main()
 
   printf("size : %d\n", get_size(&t));
   inorder(&t, print_int);
+  preorder(&t, print_int);
 
   dealloc(&t);
 }
