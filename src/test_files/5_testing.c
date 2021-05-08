@@ -20,7 +20,6 @@ bool less_rect(const void *r1, const void *r2)
 void disp(bst_iterator it1, bst_iterator it2)
 {
 	while (!equals(it1, it2)) {
-		// if (!dereference(it1)) return;
 		print_rect(dereference(it1));
 		it1 = get_next(it1);
 	}
