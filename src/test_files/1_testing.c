@@ -22,17 +22,13 @@ int main()
   init_bst(&t);
 
   int len = 8;
-  int elts[] = {10, 5, 11, 7, 6, 9, 8, 11};//, 7, 6, 9, 8};
-  // bst_insert(&t, &elts[0], less_int);
-  // bst_insert(&t, &elts[0], less_int);
+  int elts[] = {10, 5, 11, 7, 6, 9, 8, 11};
+
   for (int i=0; i<len; ++i) {
     bst_insert(&t, &elts[i], less_int);
   }
 
   inorder(&t, print_int);
-  // deallocate_bst(&t);
-  //
-  // return 0;
 
   int temp1 = 5;
   int *ptr_temp1 = &temp1;

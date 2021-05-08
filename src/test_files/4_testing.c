@@ -18,21 +18,12 @@ bool less_double(const void *d1, const void *d2)
 
 void disp(bst_iterator it1, bst_iterator it2)
 {
-  while (!equals(it1, it2)) {
-    // if (!dereference(it1)) return;
-    print_double(dereference(it1));
-    it1 = get_next(it1);
-  }
-  printf("\n");
-}
-
-void rdisp(bst_iterator it1, bst_iterator it2)
-{
-  while (!equals(it1, it2)) {
-    print_double(dereference(it2));
-    it2 = get_prev(it2);
-  }
-  printf("\n");
+	while (!equals(it1, it2)) {
+		// if (!dereference(it1)) return;
+		print_double(dereference(it1));
+		it1 = get_next(it1);
+	}
+	printf("\n");
 }
 
 int main()
