@@ -99,7 +99,7 @@ postorder(&t, print_int);
 
 ## Deallocation
 
-> This is a very important to stop to avoid memory leaks
+> This is a very important step to stop to avoid memory leaks
 
 ```c
 deallocate_bst(&t);
