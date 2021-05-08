@@ -87,6 +87,7 @@ bst_iterator end(const Bst *tree)
 
 void* dereference(const bst_iterator it)
 {
+  if (!it.current) return NULL;
   return it.current->value;
 }
 
@@ -96,6 +97,9 @@ bst_iterator get_prev(const bst_iterator it)
   init_iterator(&prev_it, NULL);
 
   if(!it.current) return prev_it;
+
+
+
   Node *curr = it.current;
 
   if(curr->left)
@@ -108,17 +112,24 @@ bst_iterator get_prev(const bst_iterator it)
     init_iterator(&prev_it, curr);
     return prev_it;
   }
+
   if (curr->parent && curr == curr->parent->right) {
     curr = curr->parent;
     init_iterator(&prev_it, curr);
     return prev_it;
   }
+
   if (curr->parent && curr == curr->parent->left) {
-    while (curr->parent->value && curr->parent->left == curr) curr = curr->parent;
+    while (curr->parent->value && curr == curr->parent->left) curr = curr->parent;
     curr = curr->parent;
+    if (!curr->value) {
+      init_iterator(&prev_it, it.current);
+      return prev_it;
+    }
     init_iterator(&prev_it, curr);
     return prev_it;
   }
+
   return prev_it;
 }
 
@@ -127,15 +138,21 @@ bst_iterator get_next(const bst_iterator it)
   bst_iterator next_it;
   init_iterator(&next_it, NULL);
 
-  if(!it.current) return next_it;
+  if(!it.current) {
+    return next_it;
+  }
+
+  if (!it.current->value) {
+    return it;
+  }
 
   Node *curr = it.current;
 
   if (curr->right) {
     curr = curr->right;
     while (curr->left) curr = curr->left;
-	init_iterator(&next_it, curr);
-	return next_it;
+    init_iterator(&next_it, curr);
+    return next_it;
   }
 
   if (curr->parent && curr == curr->parent->left) {
@@ -149,7 +166,6 @@ bst_iterator get_next(const bst_iterator it)
     curr = curr->parent;
     init_iterator(&next_it, curr);
     return next_it;
-
   }
 
   return next_it;
