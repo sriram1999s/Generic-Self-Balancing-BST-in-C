@@ -11,6 +11,8 @@ An example using a user defined type, complete with predicate and print function
 - [Insertion](#Insertion)
 - [Removal](#Removal)
 - [Finding](#Finding)
+- [Copying](#Copying)
+- [Union](#Union)
 - [Deallocation](#Deallocation)
 
 - <font size="5"> [Iterators](#Iterators) </font>
@@ -59,6 +61,9 @@ bst_insert(&t, &a, less_int);
 Here, ```t``` is of type ```Bst```, ```a``` can be of any type, ```less_int``` is the predicate function that determines the inherent association between data in the tree.
 <br><br>
 To insert an array of elements:
+
+Syntax: ```bst_array_insert(<tree>, <array>, <length_of_array>, <predicate>);```
+
 ```c
 int len = 6;
 int elts[] = {1, 2, 0, 8, -7, 15};
@@ -87,6 +92,29 @@ int a = 10;
 bst_iterator it = bst_find(&t, &a, less_int);
 ```
 Here, ```it``` is of type ```bst_iterator```, ```t``` is of type ```Bst```, ```a``` can be of any type, ```less_int``` is the predicate function that determines the inherent association between data in the tree.
+
+## Copying
+
+```c
+// assume tree is of type Bst
+
+Bst tree_copy;
+init_bst(&tree_copy);
+
+bst_copy(&tree_copy, &tree);
+```
+
+## Union
+
+Syntax: ```bst_union(<destination>, <tree1>, <tree2>, <predicate>);```
+
+```c
+Bst unified;
+init_bst(&unified);
+
+bst_union(&unified, &tree_1, &tree_2, less_double);
+```
+Here, ```tree_1``` and ```tree_2``` are of type ```Bst```, ```less_int``` is the predicate function that determines the inherent association between data in the tree.
 
 ## Traversal
 
