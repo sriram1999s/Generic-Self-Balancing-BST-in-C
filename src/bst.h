@@ -25,12 +25,13 @@ void bst_insert(Bst *tree, void *val, bool (*predicate)(const void *, const void
     } \
 }
 
+void bst_copy(Bst *, Bst *);
+void bst_union(Bst *, Bst *, Bst *, bool (*predicate)(const void *, const void *));
 void bst_remove(Bst *tree, void *val, bool (*predicate)(const void *, const void *));
 
 void _dealloc(Node *n);
 void deallocate_bst(Bst *tree);
 
-int get_size(const Bst *tree);
 void _inorder(const Node *n, void (*print)(const void *));
 void inorder(const Bst *tree, void (*print)(const void *));
 void _preorder(const Node *n, void (*print)(const void *));

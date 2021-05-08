@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "bst.h"
+#include "bst_iterator.h"
 
 static Node *create_node(void *val, Node *parent)
 {
@@ -73,10 +74,7 @@ void init_bst(Bst *tree)
 {
   if (!tree) return;
   tree->end_ = create_node(NULL, NULL);
-
-
   tree->root_ = NULL;
-  tree->size_ = 0;
 }
 
 static void update_height(Node *n)
@@ -123,13 +121,72 @@ static Node * _insert(Node *node, void *val, Node *par, bool (*predicate)(const 
   return node;
 }
 
+static void _copy(Node *h1, Node *h2)
+{
+  if (h2->left) {
+    h1->left = create_node(h2->left->value, h1);
+    h1->left->height = h2->left->height;
+    _copy(h1->left, h2->left);
+  }
+
+  if (h2->right) {
+    h1->right = create_node(h2->right->value, h1);
+    h1->right->height = h2->right->height;
+    _copy(h1->right, h2->right);
+  }
+}
+
+void bst_copy(Bst *t1, Bst *t2)
+{
+  if (!t1 || !t2) return;
+
+  deallocate_bst(t1);
+  init_bst(t1);
+
+  _copy(t1->end_, t2->end_);
+
+  if (t1->end_->left) {
+    t1->root_ = t1->end_->left;
+    t1->root_->parent = t1->end_;
+  }
+}
+
 void bst_insert(Bst *tree, void *val, bool (*predicate)(const void *, const void *))
 {
   assert(val != NULL);
   if(!tree) return;
   tree->root_ = _insert(tree->root_, val, tree->end_, predicate);
   tree->end_->left = tree->root_;
-  ++(tree->size_);
+}
+
+void bst_union(Bst *dest, Bst *t1, Bst *t2, bool (*predicate)(const void *, const void *))
+{
+  // Bst dest;
+  // init_bst(&dest);
+
+  if (!t1 && !t2) return;
+  printf("Here\n");
+
+  if (!t1) {
+    bst_copy(dest, t2);
+    return;
+  }
+
+  if (!t2) {
+    bst_copy(dest, t1);
+    return;
+  }
+
+  bst_copy(dest, t1);
+
+  bst_iterator t2_beg = begin(t2);
+  bst_iterator t2_end = end(t2);
+  while (!equals(t2_beg, t2_end)) {
+    bst_insert(dest, t2_beg.current->value, predicate);
+    t2_beg = get_next(t2_beg);
+  }
+
+  return;
 }
 
 void _dealloc(Node *n)
@@ -145,12 +202,6 @@ void deallocate_bst(Bst *tree)
 {
   if (tree)
     _dealloc(tree->end_);
-}
-
-int get_size(const Bst *tree)
-{
-    if(!tree || !tree->end_) return 0;
-    return tree->size_;
 }
 
 void _inorder(const Node *n, void( *print)(const void *))
@@ -281,5 +332,4 @@ void bst_remove(Bst *tree, void *val, bool( *predicate)(const void *, const void
   if(!tree || !tree->root_) return;
   tree->root_ = _remove(tree->root_, val, tree->end_, predicate);
   tree->end_->left = tree->root_;
-  --(tree->size_);
 }
