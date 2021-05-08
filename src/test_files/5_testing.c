@@ -5,7 +5,12 @@
 
 #include "../bst.h"
 #include "../bst_iterator.h"
-#include "rect.h"
+
+typedef struct Rect
+{
+	int l;
+	int b;
+} Rect;
 
 void print_rect(const void *ptr)
 {
