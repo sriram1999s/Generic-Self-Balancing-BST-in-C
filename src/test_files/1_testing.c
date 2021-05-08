@@ -30,7 +30,7 @@ int main()
   }
 
   inorder(&t, print_int);
-  // dealloc(&t);
+  // deallocate_bst(&t);
   //
   // return 0;
 
@@ -53,5 +53,5 @@ int main()
   inorder(&t, print_int);
   preorder(&t, print_int);
 
-  dealloc(&t);
+  deallocate_bst(&t);
 }

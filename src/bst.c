@@ -15,36 +15,6 @@ static Node *create_node(void *val, Node *parent)
   return new;
 }
 
-Node *right_rotate(Node *y)
-{
-  Node *left_y = y->left;
-  Node *r_left_y = left_y->right;
-
-  left_y->right = y;
-  left_y->parent = y->parent;
-  y->parent = left_y;
-
-  y->left = r_left_y;
-  if(r_left_y) r_left_y->parent = y;
-
-  return left_y;
-}
-
-Node *left_rotate(Node *y)
-{
-  Node *right_y = y->right;
-  Node *l_right_y = right_y->left;
-
-  right_y->left = y;
-  right_y->parent = y->parent;
-  y->parent = right_y;
-
-  y->right = l_right_y;
-  if(l_right_y) l_right_y->parent = y;
-
-  return right_y;
-}
-
 static int height(const Node *node)
 {
   if(!node) return 0;
@@ -61,6 +31,42 @@ static int balance(const Node *node)
 inline static int max(int a , int b)
 {
   return (a > b) ? a : b;
+}
+
+Node *right_rotate(Node *y)
+{
+  Node *left_y = y->left;
+  Node *r_left_y = left_y->right;
+
+  left_y->right = y;
+  left_y->parent = y->parent;
+  y->parent = left_y;
+
+  y->left = r_left_y;
+  if(r_left_y) r_left_y->parent = y;
+
+  left_y->height = 1 + max(height(left_y->left), height(left_y->right));
+  y->height = 1 + max(height(y->left), height(y->right));
+
+  return left_y;
+}
+
+Node *left_rotate(Node *y)
+{
+  Node *right_y = y->right;
+  Node *l_right_y = right_y->left;
+
+  right_y->left = y;
+  right_y->parent = y->parent;
+  y->parent = right_y;
+
+  y->right = l_right_y;
+  if(l_right_y) l_right_y->parent = y;
+
+  right_y->height = 1 + max(height(right_y->left), height(right_y->right));
+  y->height = 1 + max(height(y->left), height(y->right));
+
+  return right_y;
 }
 
 void init_bst(Bst *tree)
@@ -136,7 +142,7 @@ void _dealloc(Node *n)
   }
 }
 
-void dealloc(Bst *tree)
+void deallocate_bst(Bst *tree)
 {
   if (tree)
     _dealloc(tree->end_);

@@ -20,7 +20,7 @@ void bst_insert(Bst *tree, void *val, bool (*less_than)(const void *, const void
 void bst_remove(Bst *tree, void *val, bool (*less_than)(const void *, const void *));
 
 void _dealloc(Node *n);
-void dealloc(Bst *tree);
+void deallocate_bst(Bst *tree);
 
 int get_size(const Bst *tree);
 void _inorder(const Node *n, void (*print)(const void *));

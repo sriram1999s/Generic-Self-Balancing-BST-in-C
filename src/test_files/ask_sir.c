@@ -48,5 +48,5 @@ int main()
   int *ptr_temp2 = &temp2;
   find(&t, ptr_temp2, less_int);
 
-  dealloc(&t);
+  deallocate_bst(&t);
 }

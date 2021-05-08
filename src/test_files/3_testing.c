@@ -1,7 +1,7 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
-#include<assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <assert.h>
 
 #include "../bst.h"
 #include "../bst_iterator.h"
@@ -63,5 +63,5 @@ int main()
   disp(it_beg, it_end);
   rdisp(it_beg, get_prev(it_end));
 
-  dealloc(&t);
+  deallocate_bst(&t);
 }

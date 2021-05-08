@@ -45,5 +45,5 @@ int main()
   assert(dereference(it_end)==NULL);
   disp(it_beg, it_end);
 
-  dealloc(&t);
+  deallocate_bst(&t);
 }
