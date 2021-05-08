@@ -55,6 +55,14 @@ int a = 10;
 bst_insert(&t, &a, less_int);
 ```
 Here, ```t``` is of type ```Bst```, ```a``` can be of any type, ```less_int``` is the predicate function that determines the inherent association between data in the tree.
+<br><br>
+To insert an array of elements:
+```c
+int len = 6;
+int elts[] = {1, 2, 0, 8, -7, 15};
+
+bst_array_insert(&tree, elts, len, less_int);
+```
 
 ## Removal
 
