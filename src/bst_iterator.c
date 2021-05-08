@@ -155,18 +155,18 @@ bst_iterator get_next(const bst_iterator it)
   return next_it;
 }
 
-bst_iterator find(const Bst *tree, void *val, bool( *less_than)(const void *, const void *)) // to be modded
+bst_iterator find(const Bst *tree, void *val, bool( *predicate)(const void *, const void *)) // to be modded
 {
   bst_iterator it;
   init_iterator(&it, NULL);
   if (!tree || !tree->end_) return it;
   Node *trav = tree->root_;
   while (trav) {
-    if (!less_than(trav->value, val) && !less_than(val, trav->value)) {
+    if (!predicate(trav->value, val) && !predicate(val, trav->value)) {
       init_iterator(&it, trav);
       return it;
     }
-    if (less_than(trav->value, val)) {
+    if (predicate(trav->value, val)) {
       trav = trav->right;
     } else {
       trav = trav->left;

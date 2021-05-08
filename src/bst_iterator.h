@@ -17,6 +17,6 @@ bst_iterator end(const Bst *);
 void* dereference(const bst_iterator);
 bst_iterator get_next(const bst_iterator);
 bst_iterator get_prev(const bst_iterator);
-bst_iterator find(const Bst *tree, void *val, bool (*less_than)(const void *, const void *));
+bst_iterator find(const Bst *tree, void *val, bool (*predicate)(const void *, const void *));
 
 #endif

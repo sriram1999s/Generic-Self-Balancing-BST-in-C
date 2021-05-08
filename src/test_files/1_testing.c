@@ -52,6 +52,7 @@ int main()
   printf("size : %d\n", get_size(&t));
   inorder(&t, print_int);
   preorder(&t, print_int);
+  postorder(&t, print_int);
 
   deallocate_bst(&t);
 }

@@ -88,14 +88,14 @@ static void update_height(Node *n)
 
 }
 
-static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(const void *, const void *))
+static Node * _insert(Node *node, void *val, Node *parent, bool( *predicate)(const void *, const void *))
 {
   if(!node) return create_node(val, parent);
 
-  if(!less_than(node->value, val) && !less_than(val, node->value)) return node;
+  if(!predicate(node->value, val) && !predicate(val, node->value)) return node;
 
-  if(less_than(node->value, val)) node->right = _insert(node->right, val, node, less_than);
-  else node->left = _insert(node->left, val, node, less_than);
+  if(predicate(node->value, val)) node->right = _insert(node->right, val, node, predicate);
+  else node->left = _insert(node->left, val, node, predicate);
 
   node->height = 1 + max(height(node->left), height(node->right));
 
@@ -103,7 +103,7 @@ static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(con
 
   if(bal > 1)
   {
-    if(less_than(val, node->left->value)) return right_rotate(node);
+    if(predicate(val, node->left->value)) return right_rotate(node);
     else
     {
       node->left =  left_rotate(node->left);
@@ -113,7 +113,7 @@ static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(con
 
   if(bal < -1)
   {
-    if(less_than(node->right->value, val)) return left_rotate(node);
+    if(predicate(node->right->value, val)) return left_rotate(node);
     else
     {
       node->right = right_rotate(node->right);
@@ -123,11 +123,11 @@ static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(con
   return node;
 }
 
-void bst_insert(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
+void bst_insert(Bst *tree, void *val, bool( *predicate)(const void *, const void *))
 {
   assert(val != NULL);
   if(!tree) return;
-  tree->root_ = _insert(tree->root_, val, tree->end_, less_than);
+  tree->root_ = _insert(tree->root_, val, tree->end_, predicate);
   tree->end_->left = tree->root_;
   ++(tree->size_);
 
@@ -192,11 +192,29 @@ void preorder(const Bst *tree, void (*print)(const void *))
   }
 }
 
-static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const void *, const void *))
+void _postorder(const Node *n, void (*print)(const void *))
+{
+  if (n) {
+    _postorder(n->left, print);
+    _postorder(n->right, print);
+    print(n->value);
+  }
+}
+
+void postorder(const Bst *tree, void (*print)(const void *))
+{
+  if (tree) {
+    Node *trav = tree->root_;
+    _postorder(trav, print);
+    printf("\n");
+  }
+}
+
+static Node *_remove(Node *node, void *val, Node *par, bool( *predicate)(const void *, const void *))
 {
   if(!node) return node;
 
-  if(!less_than(val, node->value) && !less_than(node->value, val))
+  if(!predicate(val, node->value) && !predicate(node->value, val))
   {
     if(!node->left || !node->right)
     {
@@ -218,12 +236,12 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const v
         inorder_succ = inorder_succ->left;
       }
       node->value = inorder_succ->value;
-      node->right = _remove(node->right, inorder_succ->value, node, less_than);
+      node->right = _remove(node->right, inorder_succ->value, node, predicate);
     }
 
   }
-  else if(less_than(val, node->value)) node->left = _remove(node->left, val, node, less_than);
-  else node->right = _remove(node->right, val , node, less_than);
+  else if(predicate(val, node->value)) node->left = _remove(node->left, val, node, predicate);
+  else node->right = _remove(node->right, val , node, predicate);
 
   if(!node) return node;
   node->height = 1 + max(height(node->left), height(node->right));
@@ -232,7 +250,7 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const v
 
   if(bal > 1)
   {
-    if(less_than(val, node->left->value)) return right_rotate(node);
+    if(predicate(val, node->left->value)) return right_rotate(node);
     else
     {
       node->left =  left_rotate(node->left);
@@ -242,7 +260,7 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const v
 
   if(bal < -1)
   {
-    if(less_than(node->right->value, val)) return left_rotate(node);
+    if(predicate(node->right->value, val)) return left_rotate(node);
     else
     {
       node->right = right_rotate(node->right);
@@ -252,10 +270,10 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const v
   return node;
 }
 
-void bst_remove(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
+void bst_remove(Bst *tree, void *val, bool( *predicate)(const void *, const void *))
 {
   if(!tree || !tree->root_) return;
-  tree->root_ = _remove(tree->root_, val, tree->end_, less_than);
+  tree->root_ = _remove(tree->root_, val, tree->end_, predicate);
   tree->end_->left = tree->root_;
   --(tree->size_);
 }
