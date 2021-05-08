@@ -17,6 +17,14 @@ struct Bst
 
 void init_bst(Bst *tree);
 void bst_insert(Bst *tree, void *val, bool (*predicate)(const void *, const void *));
+
+#define bst_array_insert(tree, arr, length, predicate) \
+{ \
+    for (int i=0; i<length; ++i) { \
+        bst_insert(tree, &arr[i], predicate); \
+    } \
+}
+
 void bst_remove(Bst *tree, void *val, bool (*predicate)(const void *, const void *));
 
 void _dealloc(Node *n);

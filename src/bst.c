@@ -88,9 +88,9 @@ static void update_height(Node *n)
 
 }
 
-static Node * _insert(Node *node, void *val, Node *parent, bool( *predicate)(const void *, const void *))
+static Node * _insert(Node *node, void *val, Node *par, bool (*predicate)(const void *, const void *))
 {
-  if(!node) return create_node(val, parent);
+  if(!node) return create_node(val, par);
 
   if(!predicate(node->value, val) && !predicate(val, node->value)) return node;
 
@@ -123,14 +123,13 @@ static Node * _insert(Node *node, void *val, Node *parent, bool( *predicate)(con
   return node;
 }
 
-void bst_insert(Bst *tree, void *val, bool( *predicate)(const void *, const void *))
+void bst_insert(Bst *tree, void *val, bool (*predicate)(const void *, const void *))
 {
   assert(val != NULL);
   if(!tree) return;
   tree->root_ = _insert(tree->root_, val, tree->end_, predicate);
   tree->end_->left = tree->root_;
   ++(tree->size_);
-
 }
 
 void _dealloc(Node *n)
@@ -150,9 +149,7 @@ void deallocate_bst(Bst *tree)
 
 int get_size(const Bst *tree)
 {
-    if(!tree || !tree->end_)
-    return 0;
-
+    if(!tree || !tree->end_) return 0;
     return tree->size_;
 }
 
@@ -218,13 +215,22 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *predicate)(const v
   {
     if(!node->left || !node->right)
     {
-      Node *temp = node->left ? node->left :node->right;
-      if (temp == NULL)
+      Node *temp = node->left ? node->left : node->right;
+      if (!temp)
       {
-        temp = node;
-        node = NULL;
+        free(node);
+        if (par->left == node) par->left = NULL;
+        else par->right = NULL;
+        return NULL;
       }
-      else *node = *temp;
+      else
+      {
+        node->value = temp->value;
+        node->left = temp->left;
+        if (temp->left) temp->left->parent = node;
+        node->right = temp->right;
+        if (temp->right) temp->right->parent = node;
+      }
       free(temp);
     }
     else
@@ -238,29 +244,29 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *predicate)(const v
       node->value = inorder_succ->value;
       node->right = _remove(node->right, inorder_succ->value, node, predicate);
     }
-
+  } else if(predicate(val, node->value)) {
+    node->left = _remove(node->left, val, node, predicate);
+  } else {
+    node->right = _remove(node->right, val , node, predicate);
   }
-  else if(predicate(val, node->value)) node->left = _remove(node->left, val, node, predicate);
-  else node->right = _remove(node->right, val , node, predicate);
 
-  if(!node) return node;
   node->height = 1 + max(height(node->left), height(node->right));
 
   int bal = balance(node);
 
   if(bal > 1)
   {
-    if(predicate(val, node->left->value)) return right_rotate(node);
+    if(balance(node->left) >= 0) return right_rotate(node);
     else
     {
-      node->left =  left_rotate(node->left);
+      node->left = left_rotate(node->left);
       return right_rotate(node);
     }
   }
 
   if(bal < -1)
   {
-    if(predicate(node->right->value, val)) return left_rotate(node);
+    if(balance(node->right) <= 0) return left_rotate(node);
     else
     {
       node->right = right_rotate(node->right);
