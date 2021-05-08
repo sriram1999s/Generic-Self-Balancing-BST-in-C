@@ -9,7 +9,7 @@ Examples can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/
 - [Insertion](#Insertion)
 - [Removal](#Removal)
 - [Finding](#Finding)
-- [Deallocation](#Deallocate)
+- [Deallocation](#Deallocation)
 
 - <font size="5"> [Iterators](#Iterators) </font>
 	- Bidirectional
