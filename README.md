@@ -1,8 +1,8 @@
 # Generic Self-Balancing Binary Search Tree in C
 
-Code can be found [here]()
+Code can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/main/src)
 
-Examples can be found [here]()
+Examples can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/main/src/test_files)
 
 ## Functionalities
 
