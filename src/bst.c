@@ -90,7 +90,7 @@ static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(con
   if(bal > 1)
   {
     if(less_than(val, node->left->value)) return right_rotate(node);
-    else 
+    else
     {
       node->left =  left_rotate(node->left);
       return right_rotate(node);
@@ -177,6 +177,73 @@ void preorder(const Bst *tree, void (*print)(const void *))
   }
 }
 
+static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const void *, const void *))
+{
+  if(!node) return node;
+
+  if(!less_than(val, node->value) && !less_than(node->value, val))
+  {
+    if(!node->left || !node->right)
+    {
+      Node *temp = node->left ? node->left :node->right;
+      if (temp == NULL)
+      {
+        temp = node;
+        node = NULL;
+      }
+      else *node = *temp;
+      free(temp);
+    }
+    else
+    {
+      Node *inorder_prev = NULL;
+      Node *inorder_succ = node->right;
+      while (inorder_succ->left) {
+        inorder_prev = inorder_succ;
+        inorder_succ = inorder_succ->left;
+      }
+      node->value = inorder_succ->value;
+      node->right = _remove(node->right, inorder_succ->value, node, less_than);
+    }
+
+  }
+  else if(less_than(val, node->value)) node->left = _remove(node->left, val, node, less_than);
+  else node->right = _remove(node->right, val , node, less_than);
+
+  if(!node) return node;
+  node->height = 1 + max(height(node->left), height(node->right));
+
+  int bal = balance(node);
+
+  if(bal > 1)
+  {
+    if(less_than(val, node->left->value)) return right_rotate(node);
+    else
+    {
+      node->left =  left_rotate(node->left);
+      return right_rotate(node);
+    }
+  }
+
+  if(bal < -1)
+  {
+    if(less_than(node->right->value, val)) return left_rotate(node);
+    else
+    {
+      node->right = right_rotate(node->right);
+      return left_rotate(node);
+    }
+  }
+  return node;
+}
+void bst_remove(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
+{
+  if(!tree || !tree->root_) return;
+  tree->root_ = _remove(tree->root_, val, tree->end_, less_than);
+  tree->end_->left = tree->root_;
+  --(tree->size_);
+}
+/*
 void bst_remove(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
 {
   if (!tree || !tree->end_ || !tree->root_) return;
@@ -264,6 +331,8 @@ void bst_remove(Bst *tree, void *val, bool( *less_than)(const void *, const void
     }
   }
 }
+*/
+
 bool has_prev(const bst_iterator it)
 {
   if (!it.current) return false;

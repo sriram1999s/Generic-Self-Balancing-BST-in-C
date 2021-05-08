@@ -4,7 +4,7 @@
 #include<assert.h>
 
 #include "../bst.h"
-
+#include "../bst_iterator.h"
 bool less_int(const void * x, const void *y)
 {
   return *(int*)x < *(int*)y;
@@ -21,7 +21,7 @@ int main()
   init_bst(&t);
 
   int len = 8;
-  int elts[] = {10, 5, 2, 7, 6, 9, 8, 11};//, 7, 6, 9, 8};
+  int elts[] = {10, 5, 11, 7, 6, 9, 8, 11};//, 7, 6, 9, 8};
   // bst_insert(&t, &elts[0], less_int);
   // bst_insert(&t, &elts[0], less_int);
   for (int i=0; i<len; ++i) {
@@ -33,10 +33,10 @@ int main()
   //
   // return 0;
 
-  int temp1 = 10;
+  int temp1 = 5;
   int *ptr_temp1 = &temp1;
   bst_iterator it1 = find(&t, ptr_temp1, less_int);
-  print_int(dereference(it1));
+  if(dereference(it1)) print_int(dereference(it1));
   printf("\n");
 
   int temp2 = 13;

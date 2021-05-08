@@ -1,7 +1,6 @@
 #ifndef BST_H
 #define BST_H
 #include<stdbool.h>
-
 // #define get_ptr(type, __num, value) ({ type tmp##__num = value; type *ptr##__num = &tmp##__num; ptr##__num; })
 
 typedef struct Node Node;
@@ -29,13 +28,19 @@ struct bst_iterator
 };
 
 bool has_next(const bst_iterator);
+
 bool has_prev(const bst_iterator);
 
 bool equals(const bst_iterator, const bst_iterator);
+
 bst_iterator begin(const Bst *);
+
 bst_iterator end(const Bst *);
+
 void* dereference(const bst_iterator);
+
 bst_iterator get_next(const bst_iterator);
+
 bst_iterator get_prev(const bst_iterator);
 
 void init_bst(Bst *tree);
