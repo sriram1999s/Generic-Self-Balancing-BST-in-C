@@ -42,9 +42,11 @@ int main()
   int len = 7;
   int elts[] = {10, 5, 2, 7, 6, 9, 8};
 
-  for (int i=0; i<len; ++i) {
-    bst_insert(&t, &elts[i], less_int);
-  }
+  // for (int i=0; i<len; ++i) {
+  //   bst_insert(&t, &elts[i], less_int);
+  // }
+
+  bst_array_insert(&t, elts, len, less_int);
 
   inorder(&t, print_int);
 
