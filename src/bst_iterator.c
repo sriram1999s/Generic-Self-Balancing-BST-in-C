@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+
 #include "bst.h"
 #include "bst_iterator.h"
 

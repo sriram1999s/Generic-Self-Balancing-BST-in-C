@@ -1,10 +1,11 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
-#include<assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <assert.h>
 
 #include "../bst.h"
 #include "../bst_iterator.h"
+
 bool less_int(const void * x, const void *y)
 {
   return *(int*)x < *(int*)y;

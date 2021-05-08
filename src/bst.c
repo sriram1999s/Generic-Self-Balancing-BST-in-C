@@ -1,6 +1,7 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
 #include "bst.h"
 
 static Node *create_node(void *val, Node *parent)
@@ -13,6 +14,7 @@ static Node *create_node(void *val, Node *parent)
   new->parent = parent;
   return new;
 }
+
 Node *right_rotate(Node *y)
 {
   Node *left_y = y->left;
@@ -42,21 +44,25 @@ Node *left_rotate(Node *y)
 
   return right_y;
 }
+
 static int height(const Node *node)
 {
   if(!node) return 0;
   return node->height;
 }
+
 static int balance(const Node *node)
 {
   if(!node)
     return 0;
   return height(node->left) - height(node->right);
 }
+
 inline static int max(int a , int b)
 {
   return (a > b) ? a : b;
 }
+
 void init_bst(Bst *tree)
 {
   if (!tree) return;
@@ -66,6 +72,7 @@ void init_bst(Bst *tree)
   tree->root_ = NULL;
   tree->size_ = 0;
 }
+
 static void update_height(Node *n)
 {
   if(!n) return;
@@ -74,6 +81,7 @@ static void update_height(Node *n)
   update_height(n->right);
 
 }
+
 static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(const void *, const void *))
 {
   if(!node) return create_node(val, parent);
@@ -108,6 +116,7 @@ static Node * _insert(Node *node, void *val, Node *parent, bool( *less_than)(con
   }
   return node;
 }
+
 void bst_insert(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
 {
   assert(val != NULL);
@@ -236,6 +245,7 @@ static Node *_remove(Node *node, void *val, Node *par, bool( *less_than)(const v
   }
   return node;
 }
+
 void bst_remove(Bst *tree, void *val, bool( *less_than)(const void *, const void *))
 {
   if(!tree || !tree->root_) return;
