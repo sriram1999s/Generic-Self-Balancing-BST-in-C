@@ -4,6 +4,8 @@ Code can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/main
 
 Examples can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/main/src/test_files)
 
+An example using a user defined type, complete with predicate and print functions can be found [here](https://github.com/sriram1999s/DesignPatterns/blob/main/src/test_files/5_testing.c)
+
 ## Functionalities
 
 - [Insertion](#Insertion)
@@ -12,7 +14,7 @@ Examples can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/
 - [Deallocation](#Deallocation)
 
 - <font size="5"> [Iterators](#Iterators) </font>
-	- Bidirectional
+	- Bidirectional (Move in the inorder fashion)
 	- Interfaces Supported:
 		- [begin](#Begin)
 		- [end](#End)
