@@ -1,17 +1,9 @@
 #ifndef BST_H
 #define BST_H
 #include<stdbool.h>
-// #define get_ptr(type, __num, value) ({ type tmp##__num = value; type *ptr##__num = &tmp##__num; ptr##__num; })
+#include "node.h"
 
-typedef struct Node Node;
-struct Node
-{
-  void *value;
-  Node *left;
-  Node *right;
-  Node *parent;
-  int height;
-};
+// #define get_ptr(type, __num, value) ({ type tmp##__num = value; type *ptr##__num = &tmp##__num; ptr##__num; })
 
 typedef struct Bst Bst;
 struct Bst
