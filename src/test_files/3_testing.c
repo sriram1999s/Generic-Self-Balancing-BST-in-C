@@ -4,6 +4,7 @@
 #include<assert.h>
 
 #include "../bst.h"
+#include "../bst_iterator.h"
 
 bool less_int(const void * x, const void *y)
 {
