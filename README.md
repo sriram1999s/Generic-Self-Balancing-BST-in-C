@@ -9,6 +9,7 @@ Examples can be found [here](https://github.com/sriram1999s/DesignPatterns/tree/
 - [Insertion](#Insertion)
 - [Removal](#Removal)
 - [Finding](#Finding)
+- [Deallocation](#Deallocate)
 
 - <font size="5"> [Iterators](#Iterators) </font>
 	- Bidirectional
@@ -94,6 +95,14 @@ The supported methods of traversal are:
 inorder(&t, print_int);
 preorder(&t, print_int);
 postorder(&t, print_int);
+```
+
+## Deallocation
+
+> This is a very important to stop to avoid memory leaks
+
+```c
+deallocate_bst(&t);
 ```
 
 # Usage of BST Iterators
