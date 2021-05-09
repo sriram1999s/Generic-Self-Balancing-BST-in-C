@@ -41,11 +41,9 @@ int main()
   bst_iterator it2 = find(&t, ptr_temp2, less_int);
   assert(dereference(it2) == NULL);
 
-  printf("size : %d\n", get_size(&t));
   bst_remove(&t, ptr_temp1, less_int);
   printf("Here\n");
 
-  printf("size : %d\n", get_size(&t));
   inorder(&t, print_int);
   preorder(&t, print_int);
   postorder(&t, print_int);
