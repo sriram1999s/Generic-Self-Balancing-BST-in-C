@@ -34,7 +34,7 @@ inline static int max(int a , int b)
   return (a > b) ? a : b;
 }
 
-Node *right_rotate(Node *y)
+static Node *right_rotate(Node *y)
 {
   Node *left_y = y->left;
   Node *r_left_y = left_y->right;
@@ -52,7 +52,7 @@ Node *right_rotate(Node *y)
   return left_y;
 }
 
-Node *left_rotate(Node *y)
+static Node *left_rotate(Node *y)
 {
   Node *right_y = y->right;
   Node *l_right_y = right_y->left;
@@ -189,7 +189,7 @@ void bst_union(Bst *dest, Bst *t1, Bst *t2, bool (*predicate)(const void *, cons
   return;
 }
 
-void _dealloc(Node *n)
+static void _dealloc(Node *n)
 {
   if (n) {
     _dealloc(n->left);
@@ -204,7 +204,7 @@ void deallocate_bst(Bst *tree)
     _dealloc(tree->end_);
 }
 
-void _inorder(const Node *n, void( *print)(const void *))
+static void _inorder(const Node *n, void( *print)(const void *))
 {
   if (n) {
     _inorder(n->left, print);
@@ -222,7 +222,7 @@ void inorder(const Bst *tree, void( *print)(const void *))
   }
 }
 
-void _preorder(const Node *n, void (*print)(const void *n))
+static void _preorder(const Node *n, void (*print)(const void *n))
 {
   if (n) {
     print(n->value);
@@ -240,7 +240,7 @@ void preorder(const Bst *tree, void (*print)(const void *))
   }
 }
 
-void _postorder(const Node *n, void (*print)(const void *))
+static void _postorder(const Node *n, void (*print)(const void *))
 {
   if (n) {
     _postorder(n->left, print);

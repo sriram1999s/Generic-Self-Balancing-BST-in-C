@@ -18,25 +18,14 @@ struct Bst
 void init_bst(Bst *tree);
 void bst_insert(Bst *tree, void *val, bool (*predicate)(const void *, const void *));
 
-#define bst_array_insert(tree, arr, length, predicate) \
-{ \
-    for (int i=0; i<length; ++i) { \
-        bst_insert(tree, &arr[i], predicate); \
-    } \
-}
+#define bst_array_insert(tree, arr, length, predicate) { for (int i=0; i<length; ++i) {bst_insert(tree, &arr[i], predicate);} }
 
 void bst_copy(Bst *, Bst *);
 void bst_union(Bst *, Bst *, Bst *, bool (*predicate)(const void *, const void *));
 void bst_remove(Bst *tree, void *val, bool (*predicate)(const void *, const void *));
-
-void _dealloc(Node *n);
-void deallocate_bst(Bst *tree);
-
-void _inorder(const Node *n, void (*print)(const void *));
 void inorder(const Bst *tree, void (*print)(const void *));
-void _preorder(const Node *n, void (*print)(const void *));
 void preorder(const Bst *tree, void (*print)(const void *));
-void _postorder(const Node *n, void (*print)(const void *));
 void postorder(const Bst *tree, void (*print)(const void *));
+void deallocate_bst(Bst *tree);
 
 #endif
